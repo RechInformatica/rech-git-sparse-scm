@@ -1,0 +1,7 @@
+out
+node_modules
+.vscode-test/
+*.vsix
+PsPadBK
+tsconfig.tsbuildinfo
+package-lock.json
