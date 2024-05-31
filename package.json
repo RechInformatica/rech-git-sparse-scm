@@ -9,13 +9,28 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": ["*"],
   "main": "./out/extension.js",
   "contributes": {
     "menus": {
+      "scm/resourceFolder/context": [
+        {
+          "command": "rech-git-sparse-scm.sparseCheckout"
+        }
+      ],
+      "scm/resourceGroup/context": [
+        {
+          "command": "rech-git-sparse-scm.sparseCheckout"
+        }
+      ],
       "scm/resourceState/context": [
         {
           "command": "rech-git-sparse-scm.sparseCheckout",
+          "when": "scmResourceState == remote",
+          "group": "inline"
+        },
+        {
+          "command": "rech-git-sparse-scm.test",
           "when": "scmResourceState == remote"
         }
       ]
@@ -27,11 +42,16 @@
       },
       {
         "command": "rech-git-sparse-scm.sparseCheckout",
-        "title": "Git Sparse: Sparse Checkout",
+        "title": "Sparse Checkout",
         "icon": {
-          "light": "icons/light/open-change-base.svg",
-          "dark": "icons/dark/open-change-base.svg"
+          "light": "icons/light/sparse-checkout.svg",
+          "dark": "icons/dark/sparse-checkout.svg"
         }
+      },
+      {
+        "command": "rech-git-sparse-scm.test",
+        "title": "Testi",
+        "icon": "$(add)"
       }
     ]
   },

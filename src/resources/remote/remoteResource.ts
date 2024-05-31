@@ -15,7 +15,7 @@ export class RemoteResource implements SourceControlResourceState {
     contextValue?: string | undefined;
 
     constructor(name: string) {
-        this.command = new sparseCheckoutCommand();
+        // this.command = new sparseCheckoutCommand();
         this.decorations = new RemoteResourceDecoration();
         this.resourceUri = Uri.parse(name);
         this.contextValue = "remote";
