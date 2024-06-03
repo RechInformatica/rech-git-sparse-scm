@@ -1,30 +1,27 @@
 import { SourceControl, SourceControlResourceGroup, scm } from "vscode";
-import { ResourceStateList } from '../resources/resourceStateList';
+import { ResourceStateProvider as ResourceStateProvider } from './resources-states/provider/resourceStateProvider';
 import { TestCommand } from "../commands/testCommand";
-import { RemoteResource } from "../resources/remote/remoteResource";
 
 
 export class Repository  {
 	private gitSparseSCM: SourceControl;
 	private remoteRepository: SourceControlResourceGroup;
-	private resourceStateList: ResourceStateList;
+	private resourceStateProvider: ResourceStateProvider;
 
-    constructor(resourceStateList: ResourceStateList) {
+    constructor(resourceStateProvider: ResourceStateProvider) {
 		this.gitSparseSCM = scm.createSourceControl('git-sparse', 'Git Sparse');
 		this.remoteRepository = this.gitSparseSCM.createResourceGroup("remote-repo", "Remote Repository");
-		this.resourceStateList = resourceStateList;
-		this.remoteRepository.resourceStates = this.resourceStateList.load().getResourceList();
-        // this.sourceControl = this.sourceControl.createResourceGroup("teste", "teste")
+		this.resourceStateProvider = resourceStateProvider;
+		this.remoteRepository.resourceStates = this.resourceStateProvider.load().getResourceList();
     }
 
     public reload() {
-		const elements = this.resourceStateList.load(this.gitSparseSCM.inputBox.value).getResourceList();
-		this.remoteRepository.resourceStates = [...elements, new RemoteResource("root_2.txt")];
+		this.remoteRepository.resourceStates = this.resourceStateProvider.load(this.gitSparseSCM.inputBox.value).getResourceList();
 	}
 
     public init() {
 		this.gitSparseSCM.inputBox.placeholder = "Filtre os arquivos aqui...";
 		this.gitSparseSCM.acceptInputCommand = new TestCommand();
-		this.remoteRepository.resourceStates = this.resourceStateList.load().getResourceList();
+		this.remoteRepository.resourceStates = this.resourceStateProvider.load().getResourceList();
     }
 }

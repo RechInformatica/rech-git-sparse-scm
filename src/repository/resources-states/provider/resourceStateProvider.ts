@@ -1,6 +1,6 @@
 import { SourceControlResourceState } from "vscode";
 
-export interface ResourceStateList {
+export interface ResourceStateProvider {
     sourceControlResourceStateList: SourceControlResourceState[];
 
     load(filter?: string): this;

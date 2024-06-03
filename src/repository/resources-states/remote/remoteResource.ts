@@ -5,7 +5,7 @@ import {
     Uri
   } from "vscode";
 
-import { sparseCheckoutCommand } from "../../commands/SparseCheckoutCommand";
+// import { SparseCheckoutCommand } from "../../../commands/sparseCheckoutCommand";
 import { RemoteResourceDecoration } from "./remoteResourceDecoration";
 
 export class RemoteResource implements SourceControlResourceState {
@@ -15,7 +15,7 @@ export class RemoteResource implements SourceControlResourceState {
     contextValue?: string | undefined;
 
     constructor(name: string) {
-        // this.command = new sparseCheckoutCommand();
+        // this.command = new SparseCheckoutCommand();
         this.decorations = new RemoteResourceDecoration();
         this.resourceUri = Uri.parse(name);
         this.contextValue = "remote";

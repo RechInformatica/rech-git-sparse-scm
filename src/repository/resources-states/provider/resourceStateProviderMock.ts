@@ -1,8 +1,8 @@
 import { SourceControlResourceState } from "vscode";
-import { ResourceStateList } from "./resourceStateList";
-import { RemoteResource } from "./remote/remoteResource";
+import { ResourceStateProvider } from "./resourceStateProvider";
+import { RemoteResource } from "../remote/remoteResource";
 
-export class GitResourceStateListProvider implements ResourceStateList {
+export class ResourceStateProviderMock implements ResourceStateProvider {
     sourceControlResourceStateList: SourceControlResourceState[];
 
     constructor() {
