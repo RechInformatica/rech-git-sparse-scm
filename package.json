@@ -9,8 +9,13 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": ["*"],
+  "activationEvents": [
+    "*"
+  ],
   "main": "./out/extension.js",
+  "extensionDependencies": [
+    "vscode.git"
+  ],
   "contributes": {
     "menus": {
       "scm/resourceFolder/context": [
@@ -52,6 +57,10 @@
         "command": "rech-git-sparse-scm.test",
         "title": "Testi",
         "icon": "$(add)"
+      },
+      {
+        "command": "rech-git-sparse-scm.remotePreview",
+        "title": "Remote"
       }
     ]
   },

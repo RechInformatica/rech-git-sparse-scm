@@ -23,21 +23,28 @@ suite('ResourceStateProvider tests suite', () => {
 		                           new RemoteResource(`root_107.txt`),
 		                           new RemoteResource(`root_108.txt`),
 								   new RemoteResource(`root_109.txt`)];
-		let resources = resourcesStateProvider.load("root_10").getResourceList();
-		let json_resource_expected = JSON.stringify(resources.map(res => res.resourceUri.path.toString()));
-		let json_resource_actual = JSON.stringify(resource_expected.map(res => res.resourceUri.path.toString()));
-		assert.equal(json_resource_expected, json_resource_actual);
+		resourcesStateProvider.load("root_10").then((list) => {
+			let resources = list.getResourceList();
+			let json_resource_expected = JSON.stringify(resources.map(res => res.resourceUri.path.toString()));
+			let json_resource_actual = JSON.stringify(resource_expected.map(res => res.resourceUri.path.toString()));
+			assert.equal(json_resource_expected, json_resource_actual);
+		});
 
 		resource_expected = [new RemoteResource(`root_101.txt`)];
-		resources = resourcesStateProvider.load("root_101").getResourceList();
-		json_resource_expected = JSON.stringify(resources.map(res => res.resourceUri.path.toString()));
-		json_resource_actual = JSON.stringify(resource_expected.map(res => res.resourceUri.path.toString()));
-		assert.equal(json_resource_expected, json_resource_actual);
+		resourcesStateProvider.load("root_101").then((list) => {
+			let resources = list.getResourceList();
+			let json_resource_expected = JSON.stringify(resources.map(res => res.resourceUri.path.toString()));
+			let json_resource_actual = JSON.stringify(resource_expected.map(res => res.resourceUri.path.toString()));
+			assert.equal(json_resource_expected, json_resource_actual);
+		});
 
 		resource_expected = [];
-		resources = resourcesStateProvider.load("999").getResourceList();
-		json_resource_expected = JSON.stringify(resources.map(res => res.resourceUri.path.toString()));
-		json_resource_actual = JSON.stringify(resource_expected.map(res => res.resourceUri.path.toString()));
-		assert.equal(json_resource_expected, json_resource_actual);
+		resourcesStateProvider.load("999").then((list) => {
+			let resources = list.getResourceList();
+			let json_resource_expected = JSON.stringify(resources.map(res => res.resourceUri.path.toString()));
+			let json_resource_actual = JSON.stringify(resource_expected.map(res => res.resourceUri.path.toString()));
+			assert.equal(json_resource_expected, json_resource_actual);
+
+		});
 	});
 });

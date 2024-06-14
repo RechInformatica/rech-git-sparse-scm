@@ -2,20 +2,25 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { Repository } from './repository/repository';
-// import { ResourceStateProviderGit } from './repository/resources-states/provider/resourceStateProviderGit';
-import { ResourceStateProviderMock } from './repository/resources-states/provider/resourceStateProviderMock';
+import { ResourceStateProviderGit } from './repository/resources-states/provider/resourceStateProviderGit';
+import { RemotePreviewCommand } from './commands/remotePreviewCommand';
+import { SparseCheckoutCommand } from './commands/sparseCheckoutCommand';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
 
-	// let repository = new Repository(new ResourceStateProviderGit());
-	let repository = new Repository(new ResourceStateProviderMock());
+	let repository = new Repository(new ResourceStateProviderGit());
 	repository.init();
 
-	let sparse = vscode.commands.registerCommand('rech-git-sparse-scm.sparseCheckout', () => {
-		vscode.window.showInformationMessage('Executado Comando de Sparse Checkout!');
+	let remotePreview = vscode.commands.registerCommand('rech-git-sparse-scm.remotePreview', (uri: vscode.Uri) => {
+		RemotePreviewCommand.openPreview(uri, context);
+	});
+	context.subscriptions.push(remotePreview);
+
+	let sparse = vscode.commands.registerCommand('rech-git-sparse-scm.sparseCheckout', (resource: vscode.SourceControlResourceState) => {
+		SparseCheckoutCommand.sparseCheckout(resource.resourceUri);
 	});
 	context.subscriptions.push(sparse);
 

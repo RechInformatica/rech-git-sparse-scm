@@ -3,22 +3,29 @@ import {
     SourceControlResourceDecorations,
     SourceControlResourceState,
     Uri
-  } from "vscode";
+} from "vscode";
 
-// import { SparseCheckoutCommand } from "../../../commands/sparseCheckoutCommand";
 import { RemoteResourceDecoration } from "./remoteResourceDecoration";
+import { RemotePreviewCommand } from "../../../commands/remotePreviewCommand";
 
+/**
+ * Represents a remote resource state in source control.
+ */
 export class RemoteResource implements SourceControlResourceState {
     resourceUri: Uri;
-    command?: Command | undefined;
-    decorations?: SourceControlResourceDecorations | undefined;
-    contextValue?: string | undefined;
+    command?: Command;
+    decorations?: SourceControlResourceDecorations;
+    contextValue?: string;
 
+    /**
+     * Creates an instance of RemoteResource.
+     *
+     * @param {string} name - The name or path of the remote resource.
+     */
     constructor(name: string) {
-        // this.command = new SparseCheckoutCommand();
-        this.decorations = new RemoteResourceDecoration();
         this.resourceUri = Uri.parse(name);
+        this.command = new RemotePreviewCommand(this.resourceUri);
+        this.decorations = new RemoteResourceDecoration();
         this.contextValue = "remote";
     }
-
 }
