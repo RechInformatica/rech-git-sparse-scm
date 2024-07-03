@@ -5,6 +5,8 @@ import {
     Uri
 } from "vscode";
 
+import fs from 'fs';
+import { GitExecutor } from "../../../git/gitExecutor";
 import { RemoteResourceDecoration } from "./remoteResourceDecoration";
 import { RemotePreviewCommand } from "../../../commands/remotePreviewCommand";
 
@@ -24,8 +26,19 @@ export class RemoteResource implements SourceControlResourceState {
      */
     constructor(name: string) {
         this.resourceUri = Uri.parse(name);
-        this.command = new RemotePreviewCommand(this.resourceUri);
-        this.decorations = new RemoteResourceDecoration();
-        this.contextValue = "remote";
+        const localUri = GitExecutor.getIntance().getRepoPath()?.concat(this.resourceUri.path);
+        const existsLocal = (localUri !== undefined && fs.existsSync(localUri));
+        this.decorations = new RemoteResourceDecoration(existsLocal);
+        if (existsLocal) {
+            this.command = {
+                command: 'vscode.open',
+                title: 'Open File',
+                arguments: [Uri.file(localUri!)]
+            };
+            this.contextValue = "local";
+        } else {
+            this.command = new RemotePreviewCommand(this.resourceUri);
+            this.contextValue = "remote";
+        }
     }
 }

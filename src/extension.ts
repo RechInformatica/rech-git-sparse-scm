@@ -11,26 +11,63 @@ import { SparseCheckoutCommand } from './commands/sparseCheckoutCommand';
 export function activate(context: vscode.ExtensionContext) {
 
 
-	let repository = new Repository(new ResourceStateProviderGit());
-	repository.init();
+	// Initialize remote repository only after git extensions opens a repository
+	const resourceStateProviderGit = new ResourceStateProviderGit();
+	const repository = new Repository(resourceStateProviderGit);
+	const gitExtension = resourceStateProviderGit.getGitExtension();
+	if (gitExtension) {
+		gitExtension.exports.getAPI(1).onDidOpenRepository(() => {
+			repository.init();
+		});
+	}
 
+	// Configure file watcher to reload resources states in SCM
+	const watcher = vscode.workspace.createFileSystemWatcher('**/*');
+
+	watcher.onDidChange(async (uri) => {
+		console.log(`File changed: ${uri.fsPath}`);
+		repository.reload();
+	});
+
+	watcher.onDidCreate(async (uri) => {
+		console.log(`File created: ${uri.fsPath}`);
+		repository.reload();
+	});
+
+	watcher.onDidDelete(async (uri) => {
+		console.log(`File deleted: ${uri.fsPath}`);
+		repository.reload();
+	});
+	context.subscriptions.push(watcher);
+
+	// Commands available on extension
+
+	// Opens remote file view on local editor
 	let remotePreview = vscode.commands.registerCommand('rech-git-sparse-scm.remotePreview', (uri: vscode.Uri) => {
 		RemotePreviewCommand.openPreview(uri, context);
 	});
 	context.subscriptions.push(remotePreview);
 
-	let sparse = vscode.commands.registerCommand('rech-git-sparse-scm.sparseCheckout', (resource: vscode.SourceControlResourceState) => {
+	// Add selected file in sparse-checkout control
+	let sparseCheckout = vscode.commands.registerCommand('rech-git-sparse-scm.sparseCheckout', (resource: vscode.SourceControlResourceState) => {
 		SparseCheckoutCommand.sparseCheckout(resource.resourceUri);
 	});
-	context.subscriptions.push(sparse);
+	context.subscriptions.push(sparseCheckout);
 
-	let test = vscode.commands.registerCommand('rech-git-sparse-scm.test', () => {
-		vscode.window.showInformationMessage('Executado Comando de Teste (reload do ctrl+enter)!');
-		repository.reload();
+	// Opens an input-box to filter shown files in remote repository
+	let searchInResourceGroup = vscode.commands.registerCommand('rech-git-sparse-scm.searchInResourceGroup', () => {
+		vscode.window.showInputBox({ prompt: 'Enter search query' }).then(query => {
+			if (query) {
+				repository.setFilter(query);
+			} else {
+				repository.setFilter('');
+
+			}
+			repository.reload();
+		});
 	});
-	context.subscriptions.push(test);
-
+	context.subscriptions.push(searchInResourceGroup);
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }

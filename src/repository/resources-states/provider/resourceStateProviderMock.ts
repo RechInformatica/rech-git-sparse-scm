@@ -1,7 +1,6 @@
 import { SourceControlResourceState } from "vscode";
 import { ResourceStateProvider } from "./resourceStateProvider";
 import { RemoteResource } from "../remote/remoteResource";
-import { rejects } from "assert";
 
 /**
  * Mock implementation of ResourceStateProvider for testing purposes.
