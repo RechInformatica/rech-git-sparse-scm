@@ -1,6 +1,7 @@
+import { rejects } from 'assert';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { Uri } from 'vscode';
+import { Uri, workspace } from 'vscode';
 
 const execPromise = promisify(exec);
 
@@ -86,7 +87,13 @@ export class GitExecutor {
         if (currentBranch && currentBranch.length > 0) {
             return this.catFileFrom(currentBranch, file);
         } else {
-            return this.catFileFrom('master', file);
+            const gitConfig = workspace.getConfiguration('git');
+            const defaultBranch = gitConfig.get<string>('defaultBranchName');
+            if (defaultBranch) {
+                return this.catFileFrom(defaultBranch, file);
+            } else {
+                return '';
+            }
         }
     }
 
@@ -109,7 +116,7 @@ export class GitExecutor {
      */
     public async isSparseCheckoutRepository(): Promise<boolean> {
         const stdout = await this.raw('config core.sparseCheckout');
-        if (stdout && stdout === 'true') {
+        if (stdout && stdout.startsWith('true')) {
             return true;
         }
         return false;
@@ -155,13 +162,12 @@ export class GitExecutor {
 
         const stdout = await this.raw('branch');
         // Captura a linha que começa com '*', indicando a branch atual
-        const currentBranch = stdout.split('\n').find(line => line.startsWith('*'))?.replace('* ', '').trim();
-        let command;
-        if (currentBranch) {
-            command = `ls-tree -r ${currentBranch}`;
-        } else {
-            command = 'ls-tree -r master';
+        let currentBranch = stdout.split('\n').find(line => line.startsWith('*'))?.replace('* ', '').trim();
+        if (!currentBranch) {
+            const gitConfig = workspace.getConfiguration('git');
+            currentBranch = gitConfig.get<string>('defaultBranchName');
         }
+        let command = `ls-tree -r ${currentBranch}`;
         if (nameOnly) {
             command = `${command} --name-only`;
         }
