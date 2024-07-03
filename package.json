@@ -2,7 +2,7 @@
   "name": "rech-git-sparse-scm",
   "displayName": "SCM Sparse Checkout Extension",
   "description": "Rech Git Sparse enhances your version control experience in Visual Studio Code Source Control by integrating sparse checkout capabilities.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "rechinformatica",
   "engines": {
     "vscode": "^1.89.0"
