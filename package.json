@@ -7,7 +7,7 @@
   "engines": {
     "vscode": "^1.89.0"
   },
-  "icon": "icons/icone-rech-git-sparse.png",
+  "icon": "icons/icon-rech-git-sparse.png",
   "categories": [
     "Other"
   ],
