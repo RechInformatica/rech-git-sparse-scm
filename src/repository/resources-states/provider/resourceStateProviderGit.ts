@@ -22,6 +22,11 @@ export class ResourceStateProviderGit implements ResourceStateProvider {
         this.gitExtension = extensions.getExtension<GitExtension>('vscode.git');
     }
 
+    /**
+     * Return Git API Extension
+     *
+     * @returns {Extension<GitExtension>} Git API Extension
+     */
     public getGitExtension(): Extension<GitExtension> | undefined {
         return this.gitExtension;
     }

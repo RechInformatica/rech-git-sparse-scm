@@ -45,6 +45,11 @@ export class GitExecutor {
         this.repoPath = value;
     }
 
+    /**
+     * Gets the repository path.
+     *
+     * @return {string | undefined} The repository path.
+     */
     public getRepoPath(): string | undefined {
         return this.repoPath;
     }
@@ -113,6 +118,7 @@ export class GitExecutor {
     /**
      * Returns true when branch is published
      *
+     * @param {string} currentBranch Branch name.
      * @returns {Promise<boolean>} Branch is published.
      */
     public async isPublishedBranch(currentBranch: string): Promise<boolean> {
