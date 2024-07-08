@@ -1,17 +1,26 @@
 {
   "name": "rech-git-sparse-scm",
-  "displayName": "rech-git-sparse-scm",
+  "displayName": "SCM Sparse Checkout Extension",
   "description": "Rech Git Sparse enhances your version control experience in Visual Studio Code Source Control by integrating sparse checkout capabilities.",
-  "version": "0.0.1",
+  "version": "0.0.3",
+  "publisher": "rechinformatica",
   "engines": {
     "vscode": "^1.89.0"
   },
+  "icon": "icons/icon-rech-git-sparse.png",
   "categories": [
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished",
+    "onEditSession:file",
+    "onFileSystem:git",
+    "onFileSystem:git-show"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RechInformatica/rech-git-sparse-scm.git"
+  },
   "main": "./out/extension.js",
   "extensionDependencies": [
     "vscode.git"
@@ -20,57 +29,49 @@
     "menus": {
       "scm/resourceFolder/context": [
         {
-          "command": "rech-git-sparse-scm.sparseCheckout"
+          "command": "rech-git-sparse-scm.sparseCheckout",
+          "when": "scmProvider == git-sparse",
+          "group": "inline"
         }
       ],
       "scm/resourceGroup/context": [
         {
-          "command": "rech-git-sparse-scm.sparseCheckout"
+          "command": "rech-git-sparse-scm.searchInResourceGroup",
+          "when": "ctrl+f && scmProvider == git-sparse",
+          "group": "inline"
         }
       ],
       "scm/resourceState/context": [
         {
           "command": "rech-git-sparse-scm.sparseCheckout",
-          "when": "scmResourceState == remote",
+          "when": "scmProvider == git-sparse && scmResourceState == remote",
           "group": "inline"
-        },
-        {
-          "command": "rech-git-sparse-scm.test",
-          "when": "scmResourceState == remote"
         }
       ]
     },
     "commands": [
       {
-        "command": "rech-git-sparse-scm.init",
-        "title": "Git Sparse: Init"
-      },
-      {
         "command": "rech-git-sparse-scm.sparseCheckout",
-        "title": "Sparse Checkout",
-        "icon": {
-          "light": "icons/light/sparse-checkout.svg",
-          "dark": "icons/dark/sparse-checkout.svg"
-        }
-      },
-      {
-        "command": "rech-git-sparse-scm.test",
-        "title": "Testi",
-        "icon": "$(add)"
+        "title": "Rech Git Sparse: Sparse Checkout",
+        "icon": "$(arrow-down)"
       },
       {
         "command": "rech-git-sparse-scm.remotePreview",
-        "title": "Remote"
+        "title": "Rech Git Sparse: Open Remote Preview"
+      },
+      {
+        "command": "rech-git-sparse-scm.searchInResourceGroup",
+        "title": "Rech Git Sparse: Search in Resource Group"
       }
     ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
+    "package": "vsce package --out F:/DIV/VSCode/extension/market/rech-git-sparse-scm/rech-git-sparse-scm.vsix",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "test": "npm run compile && mocha -r ts-node/register ./src/test/**/*.test.ts",
+    "tslint": "tslint --project tsconfig.json --config tslint.json"
   },
   "devDependencies": {
     "@types/vscode": "^1.89.0",
@@ -81,6 +82,7 @@
     "eslint": "^8.57.0",
     "typescript": "^5.4.5",
     "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "vsce": "^2.15.0"
   }
 }
