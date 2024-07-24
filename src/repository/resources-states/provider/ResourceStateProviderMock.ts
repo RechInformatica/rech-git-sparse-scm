@@ -1,11 +1,12 @@
 import { SourceControlResourceState } from "vscode";
-import { ResourceStateProvider } from "./resourceStateProvider";
-import { RemoteResource } from "../remote/remoteResource";
+import { ResourceStateProvider } from "./ResourceStateProvider";
+import { RemoteResource } from "../remote/RemoteResource";
 
 /**
  * Mock implementation of ResourceStateProvider for testing purposes.
  */
 export class ResourceStateProviderMock implements ResourceStateProvider {
+
     /**
      * List of source control resource states.
      */

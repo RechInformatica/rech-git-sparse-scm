@@ -1,11 +1,8 @@
 import * as assert from 'assert';
 
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 import * as vscode from 'vscode';
-import { ResourceStateProviderMock } from '../repository/resources-states/provider/resourceStateProviderMock';
-import { RemoteResource } from '../repository/resources-states/remote/remoteResource';
-// import * as myExtension from '../../extension';
+import { ResourceStateProviderMock } from '../repository/resources-states/provider/ResourceStateProviderMock';
+import { RemoteResource } from '../repository/resources-states/remote/RemoteResource';
 
 suite('ResourceStateProvider tests suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');

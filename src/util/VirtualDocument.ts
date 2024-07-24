@@ -1,4 +1,4 @@
-import { TextDocumentContentProvider, EventEmitter, Uri } from "vscode";
+import { TextDocumentContentProvider, Uri } from "vscode";
 
 /**
  * A class that provides the content for virtual text documents.
@@ -25,4 +25,5 @@ export class VirtualDocument implements TextDocumentContentProvider {
     provideTextDocumentContent(uri: Uri): string {
         return this.fileContent;
     }
+
 }

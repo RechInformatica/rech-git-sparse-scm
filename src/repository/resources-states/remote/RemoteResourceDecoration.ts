@@ -1,14 +1,13 @@
-import {
-    SourceControlResourceDecorations,
-    ThemeIcon,
-    Uri,
-} from "vscode";
+import { SourceControlResourceDecorations, ThemeIcon, Uri } from "vscode";
 
-
+/**
+ * Class with the decoration of a remote resource.
+ */
 export class RemoteResourceDecoration implements SourceControlResourceDecorations {
-    iconPath?: string | Uri | ThemeIcon | undefined;
-    faded?: boolean | undefined;
-    tooltip?: string | undefined;
+
+    iconPath?: string | Uri | ThemeIcon;
+    faded?: boolean;
+    tooltip?: string;
 
     constructor(local: boolean) {
         if (local) {

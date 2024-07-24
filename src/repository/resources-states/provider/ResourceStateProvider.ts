@@ -4,6 +4,7 @@ import { SourceControlResourceState } from "vscode";
  * Interface that provides resource states for source control.
  */
 export interface ResourceStateProvider {
+
     /**
      * List of source control resource states.
      */
@@ -23,4 +24,5 @@ export interface ResourceStateProvider {
      * @returns {SourceControlResourceState[]} The list of resource states.
      */
     getResourceList(): SourceControlResourceState[];
+
 }

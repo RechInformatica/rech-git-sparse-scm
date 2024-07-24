@@ -1,19 +1,14 @@
-import {
-    Command,
-    SourceControlResourceDecorations,
-    SourceControlResourceState,
-    Uri
-} from "vscode";
-
 import fs from 'fs';
-import { GitExecutor } from "../../../git/gitExecutor";
-import { RemoteResourceDecoration } from "./remoteResourceDecoration";
-import { RemotePreviewCommand } from "../../../commands/remotePreviewCommand";
+import { Command, SourceControlResourceDecorations, SourceControlResourceState, Uri } from "vscode";
+import { GitExecutor } from "../../../git/GitExecutor";
+import { RemoteResourceDecoration } from "./RemoteResourceDecoration";
+import { RemotePreviewCommand } from "../../../commands/RemotePreviewCommand";
 
 /**
  * Represents a remote resource state in source control.
  */
 export class RemoteResource implements SourceControlResourceState {
+
     resourceUri: Uri;
     command?: Command;
     decorations?: SourceControlResourceDecorations;
@@ -33,7 +28,7 @@ export class RemoteResource implements SourceControlResourceState {
             this.command = {
                 command: 'vscode.open',
                 title: 'Open File',
-                arguments: [Uri.file(localUri!)]
+                arguments: [Uri.file(localUri)]
             };
             this.contextValue = "local";
         } else {

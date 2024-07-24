@@ -1,4 +1,3 @@
-import { rejects } from 'assert';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { Uri, workspace } from 'vscode';
@@ -9,11 +8,10 @@ const execPromise = promisify(exec);
  * A class to execute Git commands.
  */
 export class GitExecutor {
+
     private static gitExecutorInstance: GitExecutor;
     private gitPath: string | undefined;
     private repoPath: string | undefined;
-
-    constructor() { }
 
     /**
      * Gets the singleton instance of the GitExecutor.
@@ -116,10 +114,7 @@ export class GitExecutor {
      */
     public async isSparseCheckoutRepository(): Promise<boolean> {
         const stdout = await this.raw('config core.sparseCheckout');
-        if (stdout && stdout.startsWith('true')) {
-            return true;
-        }
-        return false;
+        return stdout.startsWith('true');
     }
 
     /**
@@ -130,10 +125,7 @@ export class GitExecutor {
      */
     public async isPublishedBranch(currentBranch: string): Promise<boolean> {
         const stdout = await this.raw(`branch --list --remotes origin/${currentBranch}`);
-        if (stdout && stdout.length > 0) {
-            return true;
-        }
-        return false;
+        return stdout.length > 0;
     }
 
     /**
@@ -142,14 +134,9 @@ export class GitExecutor {
      * @returns {Promise<string>} The current branch.
      */
     public async currentBranch(): Promise<string> {
-        const stdout = await this.raw('branch');
         // Captura a linha que começa com '*', indicando a branch atual
-        const currentBranch = stdout.split('\n').find(line => line.startsWith('*'))?.replace('* ', '').trim();
-        if (currentBranch) {
-            return currentBranch;
-        } else {
-            return '';
-        }
+        const stdout = await this.raw('branch');
+        return stdout.split('\n').find(line => line.startsWith('*'))?.replace('* ', '').trim() ?? '';
     }
 
     /**

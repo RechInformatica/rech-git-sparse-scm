@@ -1,15 +1,16 @@
 import { Command, Uri } from "vscode";
 import * as vscode from 'vscode';
-import { GitExecutor } from "../git/gitExecutor";
-import { VirtualDocument } from "../util/virtualDocument";
+import { GitExecutor } from "../git/GitExecutor";
+import { VirtualDocument } from "../util/VirtualDocument";
 
 /**
  * Represents a command to preview remote files.
  */
 export class RemotePreviewCommand implements Command {
+
     title: string;
     command: string;
-    arguments?: any[] | undefined;
+    arguments?: any[];
 
     /**
      * Creates an instance of RemotePreviewCommand.
