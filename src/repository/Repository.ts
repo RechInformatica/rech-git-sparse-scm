@@ -1,6 +1,6 @@
 import { SourceControl, SourceControlResourceGroup, scm } from "vscode";
-import { ResourceStateProvider as ResourceStateProvider } from './resources-states/provider/resourceStateProvider';
-import { FilterCommand } from "../commands/filterCommand";
+import { ResourceStateProvider } from './resources-states/provider/ResourceStateProvider';
+import { FilterCommand } from "../commands/FilterCommand";
 
 /**
  * Represents a repository with sparse source control management.

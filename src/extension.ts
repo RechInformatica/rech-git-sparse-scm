@@ -1,15 +1,10 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { Repository } from './repository/repository';
-import { ResourceStateProviderGit } from './repository/resources-states/provider/resourceStateProviderGit';
-import { RemotePreviewCommand } from './commands/remotePreviewCommand';
-import { SparseCheckoutCommand } from './commands/sparseCheckoutCommand';
+import { Repository } from './repository/Repository';
+import { ResourceStateProviderGit } from './repository/resources-states/provider/ResourceStateProviderGit';
+import { RemotePreviewCommand } from './commands/RemotePreviewCommand';
+import { SparseCheckoutCommand } from './commands/SparseCheckoutCommand';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
 
 	// Initialize remote repository only after git extensions opens a repository
 	const resourceStateProviderGit = new ResourceStateProviderGit();
@@ -69,5 +64,6 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(searchInResourceGroup);
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {
+    //
+}

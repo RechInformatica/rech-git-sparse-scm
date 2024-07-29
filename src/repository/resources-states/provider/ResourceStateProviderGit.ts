@@ -1,13 +1,14 @@
 import { Extension, SourceControlResourceState, extensions } from "vscode";
-import { ResourceStateProvider } from "./resourceStateProvider";
+import { ResourceStateProvider } from "./ResourceStateProvider";
 import { GitExtension } from "../../../git/git";
-import { GitExecutor } from "../../../git/gitExecutor";
-import { RemoteResource } from "../remote/remoteResource";
+import { GitExecutor } from "../../../git/GitExecutor";
+import { RemoteResource } from "../remote/RemoteResource";
 
 /**
  * Provides resource states for Git repositories.
  */
 export class ResourceStateProviderGit implements ResourceStateProvider {
+
     /**
      * List of source control resource states.
      */
@@ -89,4 +90,5 @@ export class ResourceStateProviderGit implements ResourceStateProvider {
     getResourceList(): SourceControlResourceState[] {
         return this.sourceControlResourceStateList;
     }
+
 }
