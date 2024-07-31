@@ -31,7 +31,6 @@ export class Repository {
    * Initializes the repository with initial setup.
    */
   public init() {
-    // todo: não criar quando for sparse
     this.gitSparseSCM.inputBox.visible = false;
     this.resourceStateProvider.load().then((list) => {
       this.remoteRepository.resourceStates = list.getResourceList();
