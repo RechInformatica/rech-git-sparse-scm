@@ -140,6 +140,15 @@ export class GitExecutor {
     }
 
     /**
+     * Gets the project URL.
+     *
+     * @returns {Promise<string>} The URL from project.
+     */
+    public async getUrl(): Promise<string> {
+        return await this.raw('remote get-url origin');
+    }
+
+    /**
      * Lists the files in a tree structure for a specific branch.
      *
      * @param {boolean} nameOnly - Whether to list only file names.

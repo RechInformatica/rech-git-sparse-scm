@@ -20,17 +20,14 @@ export function activate(context: vscode.ExtensionContext) {
 	const watcher = vscode.workspace.createFileSystemWatcher('**/*');
 
 	watcher.onDidChange(async (uri) => {
-		console.log(`File changed: ${uri.fsPath}`);
 		repository.reload();
 	});
 
 	watcher.onDidCreate(async (uri) => {
-		console.log(`File created: ${uri.fsPath}`);
 		repository.reload();
 	});
 
 	watcher.onDidDelete(async (uri) => {
-		console.log(`File deleted: ${uri.fsPath}`);
 		repository.reload();
 	});
 	context.subscriptions.push(watcher);

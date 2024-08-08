@@ -68,7 +68,10 @@ export class RemotePreviewCommand implements Command {
                     const gitConfig = vscode.workspace.getConfiguration('git');
                     branch = gitConfig.get<string>('defaultBranchName');
                 }
-                panel.webview.html = `<img src="https://gitlab.rech.com.br/gitlab/rech/java/JRIUtil/-/raw/${branch}${resourceUri.fsPath.replaceAll('\\', '/')}"/>`;
+                gitExecutor.getUrl().then((url) => {
+                    url = url.replace(/\.git\n$/, '');
+                    panel.webview.html = `<img src="${url}/-/raw/${branch}${resourceUri.fsPath.replaceAll('\\', '/')}"/>`;
+                });
             });
         });
     }
