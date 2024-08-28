@@ -6,7 +6,7 @@ Welcome to the VS Code SCM Sparse Checkout Extension! This extension integrates 
 
 ## Features
 
-### Version 1.0
+### Version 0.0.4
 
 - **Repository File View**: Visualize all the files in your repository within the VS Code editor.
 - **Sparse Checkout**: Easily perform sparse checkout by clicking a button on the file list.
@@ -20,7 +20,7 @@ Welcome to the VS Code SCM Sparse Checkout Extension! This extension integrates 
 
 ## Usage
 
-1. After installing the extension, open your project in VS Code.
+1. After installing the extension, open your project with sparse-checkout in VS Code.
 2. Navigate to the Source Control view.
 3. You will see a new section displaying all the files in your repository.
 4. To perform a sparse checkout, simply click the button next to the file or folder you want to checkout.
