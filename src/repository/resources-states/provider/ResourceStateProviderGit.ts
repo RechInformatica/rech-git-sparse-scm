@@ -46,7 +46,8 @@ export class ResourceStateProviderGit implements ResourceStateProvider {
 
             const api = this.gitExtension.exports.getAPI(1);
             if (api.repositories.length === 0) {
-                return reject(new Error('No Git repositories found.'));
+                console.log('No Git repositories found.');
+                return resolve(this);
             }
 
             const repository = api.repositories[0];
@@ -61,23 +62,24 @@ export class ResourceStateProviderGit implements ResourceStateProvider {
             gitExecutor.setRepoPath(repoPath);
 
             gitExecutor.isSparseCheckoutRepository().then((isSparseChekout) => {
-                if (!isSparseChekout) {
-                    return reject(new Error('Sparse-Checkout not activated.'));
+                if (isSparseChekout) {
+                    gitExecutor.lsTree(true).then((stdout) => {
+                        const fileList = stdout.split('\n');
+                        this.sourceControlResourceStateList = fileList.map(file => new RemoteResource(file));
+                        if (filter && filter !== '') {
+                            const lowerCaseFilter = filter.toLocaleLowerCase();
+                            this.sourceControlResourceStateList = this.sourceControlResourceStateList.filter(resource =>
+                                resource.resourceUri.fsPath.toLocaleLowerCase().includes(lowerCaseFilter)
+                            );
+                        }
+                        resolve(this);
+                    }).catch(err => {
+                        reject(new Error(`Failed to execute ls-tree command: ${err.message}`));
+                    });
+                } else {
+                    console.log('Sparse-Checkout not activated.');
+                    return resolve(this);
                 }
-            });
-
-            gitExecutor.lsTree(true).then((stdout) => {
-                const fileList = stdout.split('\n');
-                this.sourceControlResourceStateList = fileList.map(file => new RemoteResource(file));
-                if (filter && filter !== '') {
-                    const lowerCaseFilter = filter.toLocaleLowerCase();
-                    this.sourceControlResourceStateList = this.sourceControlResourceStateList.filter(resource =>
-                        resource.resourceUri.fsPath.toLocaleLowerCase().includes(lowerCaseFilter)
-                    );
-                }
-                resolve(this);
-            }).catch(err => {
-                reject(new Error(`Failed to execute ls-tree command: ${err.message}`));
             });
         });
     }

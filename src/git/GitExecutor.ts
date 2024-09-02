@@ -179,7 +179,7 @@ export class GitExecutor {
      */
     public async raw(command: string): Promise<string> {
         try {
-            const { stdout, stderr } = await execPromise(`${this.gitPath} -C ${this.repoPath} ${command}`);
+            const { stdout, stderr } = await execPromise(`"${this.gitPath}" -C ${this.repoPath} ${command}`);
             if (stderr) {
                 throw new Error(stderr);
             }
