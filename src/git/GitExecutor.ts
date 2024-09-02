@@ -65,6 +65,47 @@ export class GitExecutor {
     }
 
     /**
+     * Adds a file to sparse-checkout.
+     *
+     * @param {Uri} file - The file to add to sparse-checkout.
+     * @returns {Promise<string>} The output from the Git command.
+     */
+    public sparseCheckoutRemove(file: Uri): Promise<string> {
+        let command = `sparse-checkout add !${file.path}`;
+        return this.raw(command);
+    }
+
+    /**
+     * Restore a staged file in git.
+     *
+     * @param {Uri} file - The file to add to sparse-checkout.
+     * @returns {Promise<string>} The output from the Git command.
+     */
+    public restoreStage(file: Uri): Promise<string> {
+        let path = file.path;
+        if (path.startsWith('/')) {
+            path = path.substring(1);
+        }
+        let command = `restore --staged ${path}`;
+        return this.raw(command);
+    }
+
+    /**
+     * Restore a file in git.
+     *
+     * @param {Uri} file - The file to add to sparse-checkout.
+     * @returns {Promise<string>} The output from the Git command.
+     */
+    public restore(file: Uri): Promise<string> {
+        let path = file.path;
+        if (path.startsWith('/')) {
+            path = path.substring(1);
+        }
+        let command = `restore ${path}`;
+        return this.raw(command);
+    }
+
+    /**
      * Checks out the current branch.
      *
      * @returns {Promise<string>} The output from the Git command.
