@@ -249,7 +249,7 @@ export class GitExecutor {
             // Remove duplicates lines and the path
             const lines = data.split('\n');
             const uniqueLines = Array.from(new Set(lines)).filter((line) => {
-                return !line.includes(removePath);
+                return line !== removePath;
             });
 
             fs.writeFile(filePath, uniqueLines.join('\n'), (err) => {
