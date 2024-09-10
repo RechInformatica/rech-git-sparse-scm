@@ -3,6 +3,7 @@ import { Repository } from './repository/Repository';
 import { ResourceStateProviderGit } from './repository/resources-states/provider/ResourceStateProviderGit';
 import { RemotePreviewCommand } from './commands/RemotePreviewCommand';
 import { SparseCheckoutCommand } from './commands/SparseCheckoutCommand';
+import { RemoveSparseCheckoutCommand } from './commands/RemoveSparseCheckoutCommand';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -35,16 +36,22 @@ export function activate(context: vscode.ExtensionContext) {
 	// Commands available on extension
 
 	// Opens remote file view on local editor
-	let remotePreview = vscode.commands.registerCommand('rech-git-sparse-scm.remotePreview', (uri: vscode.Uri) => {
+	const remotePreview = vscode.commands.registerCommand('rech-git-sparse-scm.remotePreview', (uri: vscode.Uri) => {
 		RemotePreviewCommand.openPreview(uri, context);
 	});
 	context.subscriptions.push(remotePreview);
 
 	// Add selected file in sparse-checkout control
-	let sparseCheckout = vscode.commands.registerCommand('rech-git-sparse-scm.sparseCheckout', (resource: vscode.SourceControlResourceState) => {
+	const sparseCheckout = vscode.commands.registerCommand('rech-git-sparse-scm.sparseCheckout', (resource: vscode.SourceControlResourceState) => {
 		SparseCheckoutCommand.sparseCheckout(resource.resourceUri);
 	});
 	context.subscriptions.push(sparseCheckout);
+
+	// Remove selected file in sparse-checkout control
+	const removeSparseCheckout = vscode.commands.registerCommand('rech-git-sparse-scm.removeSparseCheckout', (resource: vscode.SourceControlResourceState) => {
+		RemoveSparseCheckoutCommand.removeSparseCheckout(resource.resourceUri);
+	});
+	context.subscriptions.push(removeSparseCheckout);
 
 	// Opens an input-box to filter shown files in remote repository
 	let searchInResourceGroup = vscode.commands.registerCommand('rech-git-sparse-scm.searchInResourceGroup', () => {

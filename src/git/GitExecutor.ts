@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { Uri, workspace } from 'vscode';
@@ -61,6 +63,48 @@ export class GitExecutor {
      */
     public sparseCheckoutAdd(file: Uri): Promise<string> {
         let command = `sparse-checkout add ${file.path}`;
+        return this.raw(command);
+    }
+
+    /**
+     * Adds a file to sparse-checkout.
+     *
+     * @param {Uri} file - The file to add to sparse-checkout.
+     * @returns {Promise<string>} The output from the Git command.
+     */
+    public sparseCheckoutRemove(file: Uri): Promise<string> {
+        this.removePathFromSparseCheckout(file.path);
+        let command = `sparse-checkout reapply`;
+        return this.raw(command);
+    }
+
+    /**
+     * Restore a staged file in git.
+     *
+     * @param {Uri} file - The file to add to sparse-checkout.
+     * @returns {Promise<string>} The output from the Git command.
+     */
+    public restoreStage(file: Uri): Promise<string> {
+        let path = file.path;
+        if (path.startsWith('/')) {
+            path = path.substring(1);
+        }
+        let command = `restore --staged ${path}`;
+        return this.raw(command);
+    }
+
+    /**
+     * Restore a file in git.
+     *
+     * @param {Uri} file - The file to add to sparse-checkout.
+     * @returns {Promise<string>} The output from the Git command.
+     */
+    public restore(file: Uri): Promise<string> {
+        let path = file.path;
+        if (path.startsWith('/')) {
+            path = path.substring(1);
+        }
+        let command = `restore ${path}`;
         return this.raw(command);
     }
 
@@ -187,5 +231,32 @@ export class GitExecutor {
         } catch {
             throw new Error(`Error executing git command: ${command}`);
         }
+    }
+
+    /**
+     * Executes a raw Git command.
+     *
+     * @param {string} removePath - Path to remove.
+     */
+    public removePathFromSparseCheckout(removePath: string) {
+        const filePath = path.join(`${this.repoPath}/.git/info/sparse-checkout`);
+        fs.readFile(filePath, 'utf-8', (err, data) => {
+            if (err) {
+                console.error('Error at read file:', err);
+                return;
+            }
+
+            // Remove duplicates lines and the path
+            const lines = data.split('\n');
+            const uniqueLines = Array.from(new Set(lines)).filter((line) => {
+                return line !== removePath;
+            });
+
+            fs.writeFile(filePath, uniqueLines.join('\n'), (err) => {
+                if (err) {
+                    console.error('Error on write file:', err);
+                }
+            });
+        });
     }
 }

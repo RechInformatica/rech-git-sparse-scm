@@ -46,6 +46,11 @@
           "command": "rech-git-sparse-scm.sparseCheckout",
           "when": "scmProvider == git-sparse && scmResourceState == remote",
           "group": "inline"
+        },
+        {
+          "command": "rech-git-sparse-scm.removeSparseCheckout",
+          "when": "scmProvider == git-sparse && scmResourceState == local",
+          "group": "inline"
         }
       ]
     },
@@ -54,6 +59,11 @@
         "command": "rech-git-sparse-scm.sparseCheckout",
         "title": "Rech Git Sparse: Sparse Checkout",
         "icon": "$(arrow-down)"
+      },
+      {
+        "command": "rech-git-sparse-scm.removeSparseCheckout",
+        "title": "Rech Git Sparse: Remove Sparse Checkout",
+        "icon": "$(remove)"
       },
       {
         "command": "rech-git-sparse-scm.remotePreview",
