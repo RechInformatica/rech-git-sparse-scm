@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { Command, Uri } from "vscode";
 import * as vscode from 'vscode';
 import { GitExecutor } from "../git/GitExecutor";
@@ -34,15 +35,23 @@ export class RemotePreviewCommand implements Command {
         if (isImage) {
             this.openImagePreview(resourceUri);
         } else {
-            GitExecutor.getIntance().catFile(resourceUri).then(async (fileContent) => {
-                const schemeName = "remote-preview";
-                const virtualDocument = new VirtualDocument(fileContent);
-                context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(schemeName, virtualDocument));
+            const localUri = GitExecutor.getIntance().getRepoPath()?.concat(resourceUri.path);
+            const existsLocal = (localUri !== undefined && fs.existsSync(localUri));
+            if (existsLocal) {
+                // Open local file
+                await vscode.window.showTextDocument(Uri.file(localUri));
+            } else {
+                // Open preview from remote
+                GitExecutor.getIntance().catFile(resourceUri).then(async (fileContent) => {
+                    const schemeName = "remote-preview";
+                    const virtualDocument = new VirtualDocument(fileContent);
+                    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(schemeName, virtualDocument));
 
-                const uri = vscode.Uri.parse(schemeName + ":" + resourceUri.path);
-                const doc = await vscode.workspace.openTextDocument(uri);
-                await vscode.window.showTextDocument(doc, { preview: true });
-            });
+                    const uri = vscode.Uri.parse(schemeName + ":" + resourceUri.path);
+                    const doc = await vscode.workspace.openTextDocument(uri);
+                    await vscode.window.showTextDocument(doc, { preview: true });
+                });
+            }
         }
     }
 
