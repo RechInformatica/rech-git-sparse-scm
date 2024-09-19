@@ -34,7 +34,7 @@ Welcome to the VS Code SCM Sparse Checkout Extension! This extension integrates 
 * <details>
     <summary>Click to expand GIF</summary>
     <div align="center">
-        <img src=".\docs\gifs\using.gif" width="1680" alt="Using">
+        <img src="https://github.com/RechInformatica/rech-git-sparse-scm/raw/master/docs/gifs/using.gif" width="1680" alt="Using">
     </div>
 </details>
 
@@ -44,7 +44,7 @@ Welcome to the VS Code SCM Sparse Checkout Extension! This extension integrates 
 * <details>
     <summary>Click to expand GIF</summary>
     <div align="center">
-        <img src=".\docs\gifs\adding.gif" width="1680" alt="Adding">
+        <img src="https://github.com/RechInformatica/rech-git-sparse-scm/raw/master/docs/gifs/adding.gif" width="1680" alt="Adding">
     </div>
 </details>
 
@@ -52,7 +52,7 @@ Welcome to the VS Code SCM Sparse Checkout Extension! This extension integrates 
 * <details>
     <summary>Click to expand GIF</summary>
     <div align="center">
-        <img src=".\docs\gifs\removing.gif" width="1680" alt="Removing">
+        <img src="https://github.com/RechInformatica/rech-git-sparse-scm/raw/master/docs/gifs/removing.gif" width="1680" alt="Removing">
     </div>
 </details>
 
