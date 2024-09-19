@@ -43,7 +43,27 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Add selected file in sparse-checkout control
 	const sparseCheckout = vscode.commands.registerCommand('rech-git-sparse-scm.sparseCheckout', (resource: vscode.SourceControlResourceState) => {
-		SparseCheckoutCommand.sparseCheckout(resource.resourceUri);
+		let resourcePath = "";
+		if (resource && resource.resourceUri) {
+			resourcePath = resource.resourceUri.path;
+		} else {
+			// Obtain repository directory mirror list
+			const activeEditor = vscode.window.activeTextEditor;
+			if (activeEditor) {
+				const config = vscode.workspace.getConfiguration('rech-git-sparse-scm');
+				const mirrorDirectories: string[] = config.get('mirrorRepository', []);
+				mirrorDirectories.forEach(mirrorDirectory => {
+					mirrorDirectory = mirrorDirectory.replaceAll("\\", "/");
+					resourcePath = activeEditor.document.uri.path.replace(mirrorDirectory, '');
+				});
+			}
+		}
+		// Is there a valid file to sparse checkout?
+		if (resourcePath.length > 0) {
+			SparseCheckoutCommand.sparseCheckout(resourcePath, context);
+		} else {
+			vscode.window.showErrorMessage('Nenhum arquivo selecionado ou aberto para adicionar no sparse-checkout.');
+		}
 	});
 	context.subscriptions.push(sparseCheckout);
 

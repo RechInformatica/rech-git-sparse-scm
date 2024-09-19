@@ -1,5 +1,6 @@
-import { Command, Uri, commands } from "vscode";
+import { Command, Uri, commands, ExtensionContext } from "vscode";
 import { GitExecutor } from "../git/GitExecutor";
+import { RemotePreviewCommand } from "./RemotePreviewCommand";
 
 /**
  * Represents a command to perform sparse checkout in Git.
@@ -24,13 +25,14 @@ export class SparseCheckoutCommand implements Command {
     /**
      * Executes the sparse checkout command.
      *
-     * @param {Uri} resourceUri - The URI of the resource to perform sparse checkout on.
+     * @param {string} resourcePath - The path of the resource to perform sparse checkout on.
      */
-    public static sparseCheckout(resourceUri: Uri) {
+    public static sparseCheckout(resourcePath: string, context: ExtensionContext) {
         const gitExecutor = GitExecutor.getIntance();
-        gitExecutor.sparseCheckoutAdd(resourceUri).then(() => {
+        gitExecutor.sparseCheckoutAdd(resourcePath).then(() => {
             gitExecutor.checkout().then(() => {
-                commands.executeCommand('vscode.open', "." + resourceUri.path);
+                let fileUri = Uri.file(resourcePath);
+                RemotePreviewCommand.openPreview(fileUri, context)
             });
         });
     }

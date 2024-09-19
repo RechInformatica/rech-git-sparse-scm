@@ -73,7 +73,22 @@
         "command": "rech-git-sparse-scm.searchInResourceGroup",
         "title": "Rech Git Sparse: Search in Resource Group"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Rech Sparse Checkout Configuration",
+      "properties": {
+        "rech-git-sparse-scm.mirrorRepository": {
+          "title": "Local mirror repository list",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Local mirror repository list to work sparse-checkout from local file to remote"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

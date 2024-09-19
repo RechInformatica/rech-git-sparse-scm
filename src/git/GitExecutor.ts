@@ -58,11 +58,11 @@ export class GitExecutor {
     /**
      * Adds a file to sparse-checkout.
      *
-     * @param {Uri} file - The file to add to sparse-checkout.
+     * @param {string} filePath - The file to add to sparse-checkout.
      * @returns {Promise<string>} The output from the Git command.
      */
-    public sparseCheckoutAdd(file: Uri): Promise<string> {
-        let command = `sparse-checkout add ${file.path}`;
+    public sparseCheckoutAdd(filePath: string): Promise<string> {
+        let command = `sparse-checkout add ${filePath}`;
         return this.raw(command);
     }
 
