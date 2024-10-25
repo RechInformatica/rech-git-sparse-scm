@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import { Command, Uri } from "vscode";
 import * as vscode from 'vscode';
 import { GitExecutor } from "../git/GitExecutor";

@@ -4,6 +4,7 @@ import { ResourceStateProviderGit } from './repository/resources-states/provider
 import { RemotePreviewCommand } from './commands/RemotePreviewCommand';
 import { SparseCheckoutCommand } from './commands/SparseCheckoutCommand';
 import { RemoveSparseCheckoutCommand } from './commands/RemoveSparseCheckoutCommand';
+import { RemoteResource } from './repository/resources-states/remote/RemoteResource';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -68,8 +69,87 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(sparseCheckout);
 
 	// Remove selected file in sparse-checkout control
-	const removeSparseCheckout = vscode.commands.registerCommand('rech-git-sparse-scm.removeSparseCheckout', (resource: vscode.SourceControlResourceState) => {
-		RemoveSparseCheckoutCommand.removeSparseCheckout(resource.resourceUri);
+	const removeAllSparseCheckout = vscode.commands.registerCommand('rech-git-sparse-scm.removeAllSparseCheckout', (resource: vscode.SourceControlResourceState) => {
+		const workspaceFolders = vscode.workspace.workspaceFolders;
+		if (!workspaceFolders) {
+			vscode.window.showErrorMessage('No opened workspace.');
+			return;
+		}
+		// Obtain file from workspace
+		vscode.workspace.findFiles('**/*').then((uris) => {
+			// Crete a list from URIs
+			const configuration = vscode.workspace.getConfiguration('rech-git-sparse-scm');
+			const quickPickWhitelist: string[] = configuration.get('quickPickWhitelist') || [];
+
+			const items = uris.map(uri => {
+				const relativePath = vscode.workspace.asRelativePath(uri); // Caminho relativo à workspace
+				const fileName = uri.path.split('/').pop(); // Nome do arquivo
+
+				const isInWhitelist = (fileName ? quickPickWhitelist.includes(fileName) : false);
+
+				return {
+					label: (fileName ? fileName : ''),
+					picked: !isInWhitelist, // Se estiver na whitelist, não deve estar marcado
+					description: (fileName ? relativePath.replace(fileName, '') : relativePath),
+				};
+			});
+
+			// Show URIs list to pick
+			vscode.window.showQuickPick(items, {
+				canPickMany: true,
+				placeHolder: 'Select file to remove from sparse-checkout',
+			}).then((selected) => {
+				if (!selected || selected.length === 0) {
+					vscode.window.showInformationMessage('No file selected.');
+					return;
+				} else {
+					const paths = selected.map(file => {
+						let path = file.description.replace('\\', '/');
+						path = (path ? path : "/") + file.label;
+						return path;
+					});
+					RemoveSparseCheckoutCommand.removeAllSparseCheckout(paths);
+				}
+			});
+		});
+
+	});
+	context.subscriptions.push(removeAllSparseCheckout);
+	const activeEditor = vscode.window.activeTextEditor;
+	// Remove selected file in sparse-checkout control
+	const removeSparseCheckout = vscode.commands.registerCommand('rech-git-sparse-scm.removeSparseCheckout', (resource: vscode.SourceControlResourceState | vscode.Uri) => {
+		let resourcePath = "";
+		if (resource) {
+			if (resource instanceof RemoteResource) {
+				resourcePath = resource.resourceUri.path;
+			}
+			if (resource instanceof vscode.Uri) {
+				resourcePath = resource.path;
+			}
+		} else {
+			// Obtain repository directory mirror list
+			if (activeEditor) {
+				const config = vscode.workspace.getConfiguration('rech-git-sparse-scm');
+				const mirrorDirectories: string[] = config.get('mirrorRepository', []);
+				mirrorDirectories.forEach(mirrorDirectory => {
+					mirrorDirectory = mirrorDirectory.replaceAll("\\", "/");
+					resourcePath = activeEditor.document.uri.path.replace(mirrorDirectory, '');
+				});
+			}
+		}
+		if (activeEditor) {
+			let workspaceFolderFromFile = vscode.workspace.getWorkspaceFolder(activeEditor.document.uri)?.uri.fsPath;
+			if (workspaceFolderFromFile) {
+				workspaceFolderFromFile = workspaceFolderFromFile.replaceAll("\\", "/") + "/";
+				resourcePath = resourcePath.replace(workspaceFolderFromFile, '');
+			}
+		}
+		// Is there a valid file to sparse checkout?
+		if (resourcePath.length > 0) {
+			RemoveSparseCheckoutCommand.removeSparseCheckout(resourcePath);
+		} else {
+			vscode.window.showErrorMessage('Nenhum arquivo selecionado ou aberto para adicionar no sparse-checkout.');
+		}
 	});
 	context.subscriptions.push(removeSparseCheckout);
 
@@ -89,5 +169,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-    //
+	//
 }

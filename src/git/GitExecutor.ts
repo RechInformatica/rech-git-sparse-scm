@@ -67,15 +67,30 @@ export class GitExecutor {
     }
 
     /**
+     * Set a list file to sparse-checkout.
+     *
+     * @param {string} list - A list of file to set to sparse-checkout.
+     * @returns {Promise<string>} The output from the Git command.
+     */
+    public sparseCheckoutSet(list: string): Promise<string> {
+        let command = `sparse-checkout set ${list}`;
+        return this.raw(command);
+    }
+
+    /**
      * Adds a file to sparse-checkout.
      *
      * @param {Uri} file - The file to add to sparse-checkout.
      * @returns {Promise<string>} The output from the Git command.
      */
-    public sparseCheckoutRemove(file: Uri): Promise<string> {
-        this.removePathFromSparseCheckout(file.path);
-        let command = `sparse-checkout reapply`;
-        return this.raw(command);
+    public async sparseCheckoutRemove(file: Uri): Promise<string> {
+        try {
+            await this.removePathFromSparseCheckout(file.path);
+            let command = `sparse-checkout reapply`;
+            return this.raw(command);
+        } catch (error) {
+            return Promise.reject(error);
+        }
     }
 
     /**
@@ -234,28 +249,33 @@ export class GitExecutor {
     }
 
     /**
-     * Executes a raw Git command.
-     *
-     * @param {string} removePath - Path to remove.
+     * Removes path from sparse-checkout file.
+     *  @param {string} removePath - Path to remove.
      */
     public removePathFromSparseCheckout(removePath: string) {
         const filePath = path.join(`${this.repoPath}/.git/info/sparse-checkout`);
-        fs.readFile(filePath, 'utf-8', (err, data) => {
-            if (err) {
-                console.error('Error at read file:', err);
-                return;
-            }
-
-            // Remove duplicates lines and the path
-            const lines = data.split('\n');
-            const uniqueLines = Array.from(new Set(lines)).filter((line) => {
-                return line !== removePath;
-            });
-
-            fs.writeFile(filePath, uniqueLines.join('\n'), (err) => {
+        return new Promise<void>((resolve, reject) => {
+            fs.readFile(filePath, 'utf-8', (err, data) => {
                 if (err) {
-                    console.error('Error on write file:', err);
+                    console.error('Error at read file:', err);
+                    reject(err);
+                    return;
                 }
+
+                // Remove duplicated lilnes in path
+                const lines = data.split('\n');
+                const uniqueLines = Array.from(new Set(lines)).filter((line) => {
+                    return line !== removePath;
+                });
+
+                fs.writeFile(filePath, uniqueLines.join('\n'), (err) => {
+                    if (err) {
+                        console.error('Error on write file:', err);
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
             });
         });
     }

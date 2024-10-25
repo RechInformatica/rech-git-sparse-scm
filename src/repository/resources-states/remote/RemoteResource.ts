@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import { Command, SourceControlResourceDecorations, SourceControlResourceState, Uri } from "vscode";
 import { GitExecutor } from "../../../git/GitExecutor";
 import { RemoteResourceDecoration } from "./RemoteResourceDecoration";

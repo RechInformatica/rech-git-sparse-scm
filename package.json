@@ -27,6 +27,16 @@
   ],
   "contributes": {
     "menus": {
+      "explorer/context": [
+        {
+          "command": "rech-git-sparse-scm.removeSparseCheckout",
+          "group": "git-sparse"
+        },
+        {
+          "command": "rech-git-sparse-scm.removeAllSparseCheckout",
+          "group": "git-sparse"
+        }
+      ],
       "scm/resourceFolder/context": [
         {
           "command": "rech-git-sparse-scm.sparseCheckout",
@@ -66,6 +76,11 @@
         "icon": "$(remove)"
       },
       {
+        "command": "rech-git-sparse-scm.removeAllSparseCheckout",
+        "title": "Rech Git Sparse: Remove All Files from Sparse Checkout",
+        "icon": "$(remove)"
+      },
+      {
         "command": "rech-git-sparse-scm.remotePreview",
         "title": "Rech Git Sparse: Open Remote Preview"
       },
@@ -86,7 +101,16 @@
           },
           "default": [],
           "description": "Local mirror repository list to work sparse-checkout from local file to remote"
-        }
+        },
+        "rech-git-sparse-scm.quickPickWhitelist": {
+          "title": "QuickPick Whitelist",
+          "type": "array",
+          "items": {
+              "type": "string"
+          },
+          "default": [],
+          "description": "List of file names that will not be automatically selected in the QuickPick."
+      }
       }
     }
   },

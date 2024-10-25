@@ -32,7 +32,7 @@ export class SparseCheckoutCommand implements Command {
         gitExecutor.sparseCheckoutAdd(resourcePath).then(() => {
             gitExecutor.checkout().then(() => {
                 let fileUri = Uri.file(resourcePath);
-                RemotePreviewCommand.openPreview(fileUri, context)
+                RemotePreviewCommand.openPreview(fileUri, context);
             });
         });
     }
