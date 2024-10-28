@@ -68,7 +68,8 @@
       {
         "command": "rech-git-sparse-scm.sparseCheckout",
         "title": "Rech Git Sparse: Sparse Checkout",
-        "icon": "$(arrow-down)"
+        "icon": "$(arrow-down)",
+        "when": "isInMirrorRepository"
       },
       {
         "command": "rech-git-sparse-scm.removeSparseCheckout",
@@ -87,6 +88,13 @@
       {
         "command": "rech-git-sparse-scm.searchInResourceGroup",
         "title": "Rech Git Sparse: Search in Resource Group"
+      }
+    ],
+    "keybindings": [
+      {
+          "command": "rech-git-sparse-scm.sparseCheckout",
+          "key": "alt+f5",
+          "when": "isInMirrorRepository"
       }
     ],
     "configuration": {
