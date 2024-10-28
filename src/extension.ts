@@ -8,6 +8,22 @@ import { RemoteResource } from './repository/resources-states/remote/RemoteResou
 
 export function activate(context: vscode.ExtensionContext) {
 
+	const updateContext =
+
+	// Update context when active editor changes
+	vscode.window.onDidChangeActiveTextEditor(() => {
+		const editor = vscode.window.activeTextEditor;
+		if (editor) {
+			const filePath = editor.document.fileName;
+			const config = vscode.workspace.getConfiguration('rech-git-sparse-scm');
+			const mirrorRepositories = config.get('mirrorRepository', []);
+			const isInMirrorRepo = mirrorRepositories.some(repo => filePath.startsWith(repo));
+			vscode.commands.executeCommand('setContext', 'isInMirrorRepository', isInMirrorRepo);
+		} else {
+			vscode.commands.executeCommand('setContext', 'isInMirrorRepository', false);
+		}
+	});
+
 	// Initialize remote repository only after git extensions opens a repository
 	const resourceStateProviderGit = new ResourceStateProviderGit();
 	const repository = new Repository(resourceStateProviderGit);
