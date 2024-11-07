@@ -71,7 +71,12 @@ export function activate(context: vscode.ExtensionContext) {
 				const mirrorDirectories: string[] = config.get('mirrorRepository', []);
 				mirrorDirectories.forEach(mirrorDirectory => {
 					mirrorDirectory = mirrorDirectory.replaceAll("\\", "/");
-					resourcePath = activeEditor.document.uri.path.replace(mirrorDirectory, '');
+					const activePath = activeEditor.document.uri.path;
+					if (activePath.includes(mirrorDirectory)) {
+						resourcePath = activePath.replace(mirrorDirectory, '');
+						vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+						return;
+					}
 				});
 			}
 		}
