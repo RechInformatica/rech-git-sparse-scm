@@ -10,19 +10,19 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const updateContext =
 
-	// Update context when active editor changes
-	vscode.window.onDidChangeActiveTextEditor(() => {
-		const editor = vscode.window.activeTextEditor;
-		if (editor) {
-			const filePath = editor.document.fileName;
-			const config = vscode.workspace.getConfiguration('rech-git-sparse-scm');
-			const mirrorRepositories = config.get('mirrorRepository', []);
-			const isInMirrorRepo = mirrorRepositories.some(repo => filePath.startsWith(repo));
-			vscode.commands.executeCommand('setContext', 'isInMirrorRepository', isInMirrorRepo);
-		} else {
-			vscode.commands.executeCommand('setContext', 'isInMirrorRepository', false);
-		}
-	});
+		// Update context when active editor changes
+		vscode.window.onDidChangeActiveTextEditor(() => {
+			const editor = vscode.window.activeTextEditor;
+			if (editor) {
+				const filePath = editor.document.fileName;
+				const config = vscode.workspace.getConfiguration('rech-git-sparse-scm');
+				const mirrorRepositories = config.get('mirrorRepository', []);
+				const isInMirrorRepo = mirrorRepositories.some(repo => filePath.startsWith(repo));
+				vscode.commands.executeCommand('setContext', 'isInMirrorRepository', isInMirrorRepo);
+			} else {
+				vscode.commands.executeCommand('setContext', 'isInMirrorRepository', false);
+			}
+		});
 
 	// Initialize remote repository only after git extensions opens a repository
 	const resourceStateProviderGit = new ResourceStateProviderGit();
@@ -140,12 +140,17 @@ export function activate(context: vscode.ExtensionContext) {
 	// Remove selected file in sparse-checkout control
 	const removeSparseCheckout = vscode.commands.registerCommand('rech-git-sparse-scm.removeSparseCheckout', (resource: vscode.SourceControlResourceState | vscode.Uri) => {
 		let resourcePath = "";
+		let workspaceFolderFromFile;
+		if (activeEditor) {
+			workspaceFolderFromFile = vscode.workspace.getWorkspaceFolder(activeEditor.document.uri)?.uri.fsPath;
+		}
 		if (resource) {
 			if (resource instanceof RemoteResource) {
 				resourcePath = resource.resourceUri.path;
 			}
 			if (resource instanceof vscode.Uri) {
 				resourcePath = resource.path;
+				workspaceFolderFromFile = vscode.workspace.getWorkspaceFolder(resource)?.uri.fsPath;
 			}
 		} else {
 			// Obtain repository directory mirror list
@@ -158,12 +163,9 @@ export function activate(context: vscode.ExtensionContext) {
 				});
 			}
 		}
-		if (activeEditor) {
-			let workspaceFolderFromFile = vscode.workspace.getWorkspaceFolder(activeEditor.document.uri)?.uri.fsPath;
-			if (workspaceFolderFromFile) {
-				workspaceFolderFromFile = workspaceFolderFromFile.replaceAll("\\", "/") + "/";
-				resourcePath = resourcePath.replace(workspaceFolderFromFile, '');
-			}
+		if (workspaceFolderFromFile) {
+			workspaceFolderFromFile = workspaceFolderFromFile.replaceAll("\\", "/") + "/";
+			resourcePath = resourcePath.replace(workspaceFolderFromFile, '');
 		}
 		// Is there a valid file to sparse checkout?
 		if (resourcePath.length > 0) {
