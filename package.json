@@ -2,7 +2,7 @@
   "name": "rech-git-sparse-scm",
   "displayName": "SCM Sparse Checkout Extension",
   "description": "Rech Git Sparse enhances your version control experience in Visual Studio Code Source Control by integrating sparse checkout capabilities.",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "publisher": "rechinformatica",
   "engines": {
     "vscode": "^1.89.0"
@@ -92,9 +92,9 @@
     ],
     "keybindings": [
       {
-          "command": "rech-git-sparse-scm.sparseCheckout",
-          "key": "alt+f5",
-          "when": "isInMirrorRepository"
+        "command": "rech-git-sparse-scm.sparseCheckout",
+        "key": "alt+f5",
+        "when": "isInMirrorRepository"
       }
     ],
     "configuration": {
@@ -114,11 +114,11 @@
           "title": "QuickPick Whitelist",
           "type": "array",
           "items": {
-              "type": "string"
+            "type": "string"
           },
           "default": [],
           "description": "List of file names that will not be automatically selected in the QuickPick."
-      }
+        }
       }
     }
   },
